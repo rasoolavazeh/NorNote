@@ -1,0 +1,235 @@
+package ir.norooch.nornote;
+
+import android.content.Context;
+import android.content.Intent;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class Handler {
+
+    public void login(final Context context, EditText username, EditText password) {
+        final String user = username.getText().toString().trim();
+        String pass = password.getText().toString().trim();
+
+        if (user.equals("")) {
+            username.requestFocus();
+        } else if (pass.equals("")) {
+            password.requestFocus();
+        } else {
+            Toast.makeText(context, "Login", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, Dashboard.class);
+            intent.putExtra("username", user);
+            context.startActivity(intent);
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            String url = "http://127.0.0.1/NorNote/Start.php";
+            JSONObject loginObject = new JSONObject();
+            try {
+                loginObject.put("username", user);
+                loginObject.put("password", pass);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, loginObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(context, "Login " + response.toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, Dashboard.class);
+                    intent.putExtra("username", user);
+                    context.startActivity(intent);
+//                    try {
+//                        if (response.getBoolean("isOk")) {
+//                            Intent intent = new Intent(context, Dashboard.class);
+//                            intent.putExtra("username", user);
+//                            context.startActivity(intent);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+
+            requestQueue.add(request);
+        }
+    }
+
+
+    public void signUp(final Context context, EditText username, EditText password, EditText confirmPass) {
+        String user = username.getText().toString().trim();
+        String pass = password.getText().toString().trim();
+        String confirm = confirmPass.getText().toString().trim();
+
+        if (user.equals("")) {
+            username.requestFocus();
+        } else if (pass.equals("")) {
+            password.requestFocus();
+        } else if (!pass.equals(confirm)) {
+            confirmPass.requestFocus();
+        } else {
+            Toast.makeText(context, "Sign Up", Toast.LENGTH_SHORT).show();
+//            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//            String url = "";
+//            JSONObject signUpObject = new JSONObject();
+//            try {
+//                signUpObject.put("username", user);
+//                signUpObject.put("password", pass);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, signUpObject, new Response.Listener<JSONObject>() {
+//                @Override
+//                public void onResponse(JSONObject response) {
+//                    try {
+//                        if (response.getBoolean("registered")) {
+//                            Intent intent = new Intent(context, MainActivity.class);
+//                            context.startActivity(intent);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    error.printStackTrace();
+//                }
+//            });
+//
+//            requestQueue.add(request);
+
+        }
+    }
+
+    public ArrayList<Note> getNotes(Context context, String user) {
+        final ArrayList<Note> notes = new ArrayList<>();
+        Note note;
+        for (int i = 0;i < 10;i++) {
+            note = new Note();
+            note.setId(i + 10);
+            note.setTitle("title " + i);
+            note.setContent("content " + i);
+            note.setUser(user);
+            notes.add(note);
+        }
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String url = "";
+//        JSONArray jsonArray = new JSONArray();
+//        jsonArray.put(user);
+//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, jsonArray, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                if (response.length() != 0) {
+//                    JSONObject object;
+//                    Note note;
+//                    for (int i = 0;i < response.length();i++) {
+//                        try {
+//                            object = response.getJSONObject(i);
+//                            note = new Note();
+//                            note.setId(object.getInt("id"));
+//                            note.setTitle(object.getString("title"));
+//                            note.setContent(object.getString("content"));
+//                            note.setUser(object.getString("user"));
+//                            notes.add(note);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//            }
+//        });
+//
+//        requestQueue.add(request);
+
+        return notes;
+    }
+
+    public void addNote(final Context context, final Note note) {
+        Toast.makeText(context, "Note Added", Toast.LENGTH_SHORT).show();
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String url = "";
+//        JSONObject noteObject = new JSONObject();
+//        try {
+//            noteObject.put("title", note.getTitle());
+//            noteObject.put("content", note.getContent());
+//            noteObject.put("user", note.getUser());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, noteObject, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                try {
+//                    if (response.getBoolean("added")) {
+//                        Intent intent = new Intent(context, Dashboard.class);
+//                        intent.putExtra("username", note.getUser());
+//                        context.startActivity(intent);
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//            }
+//        });
+//
+//        requestQueue.add(request);
+    }
+
+    public void editNote(Context context, Note note) {
+        Toast.makeText(context, "Note Edited", Toast.LENGTH_SHORT).show();
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String url = "";
+//        JSONObject editObject = new JSONObject();
+//        try {
+//            editObject.put("id", note.getId());
+//            editObject.put("title", note.getTitle());
+//            editObject.put("content", note.getContent());
+//            editObject.put("user", note.getUser());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, editObject, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//
+//        requestQueue.add(request);
+    }
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
